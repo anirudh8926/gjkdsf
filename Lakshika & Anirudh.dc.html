@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&amp;family=Quicksand:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script src="image-slot.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{background:#f1e9fb;color:#41355f;font-family:'Quicksand',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    ::selection{background:#d9c6f5;color:#3a2960}
+    @keyframes petalFloat{0%{transform:translate(0,112vh) rotate(0deg) scale(var(--sc,1));opacity:0}8%{opacity:var(--pop,.7)}50%{transform:translate(var(--sway,30px),46vh) rotate(180deg) scale(var(--sc,1))}92%{opacity:var(--pop,.7)}100%{transform:translate(0,-15vh) rotate(360deg) scale(var(--sc,1));opacity:0}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+    @keyframes eq{0%,100%{transform:scaleY(.28)}50%{transform:scaleY(1)}}
+    @keyframes letterIn{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes popIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+    @keyframes floatUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</helmet>
+<div style="position:relative;min-height:100vh;overflow:hidden;background:radial-gradient(1100px 560px at 12% -8%,#ece0fc 0%,rgba(236,224,252,0) 55%),radial-gradient(1000px 680px at 102% 2%,#f7e6f1 0%,rgba(247,230,241,0) 52%),linear-gradient(180deg,#f6f1fd 0%,#ece3f8 100%)">
+
+  <sc-if value="{{ showPetals }}" hint-placeholder-val="{{ true }}">
+    <div aria-hidden="true" style="position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:1">
+      <sc-for list="{{ petals }}" as="p" hint-placeholder-count="14">
+        <span style="{{ p.style }}">{{ p.glyph }}</span>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <header style="position:sticky;top:0;z-index:30;text-align:center;padding:16px 16px 8px">
+    <nav style="display:inline-flex;gap:2px;flex-wrap:wrap;justify-content:center;align-items:center;background:rgba(255,255,255,.74);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid #ece0fb;border-radius:999px;padding:6px;box-shadow:0 16px 40px -24px rgba(110,81,176,.55)">
+      <button onClick="{{ goHome }}" style="position:relative;border:none;background:transparent;cursor:pointer;font-family:'Quicksand',sans-serif;font-weight:600;font-size:14.5px;color:#6a5a93;padding:10px 15px 13px;border-radius:999px;transition:color .2s,background .2s;white-space:nowrap" style-hover="background:#f0e7fc;color:#5a36a8">Home<sc-if value="{{ atHome }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;left:50%;bottom:4px;transform:translateX(-50%);width:16px;height:3px;border-radius:3px;background:linear-gradient(90deg,#b69ae8,#8b6fd0)"></span></sc-if></button>
+      <button onClick="{{ goPhotos }}" style="position:relative;border:none;background:transparent;cursor:pointer;font-family:'Quicksand',sans-serif;font-weight:600;font-size:14.5px;color:#6a5a93;padding:10px 15px 13px;border-radius:999px;transition:color .2s,background .2s;white-space:nowrap" style-hover="background:#f0e7fc;color:#5a36a8">Photos<sc-if value="{{ atPhotos }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:50%;bottom:4px;transform:translateX(-50%);width:16px;height:3px;border-radius:3px;background:linear-gradient(90deg,#b69ae8,#8b6fd0)"></span></sc-if></button>
+      <button onClick="{{ goSong }}" style="position:relative;border:none;background:transparent;cursor:pointer;font-family:'Quicksand',sans-serif;font-weight:600;font-size:14.5px;color:#6a5a93;padding:10px 15px 13px;border-radius:999px;transition:color .2s,background .2s;white-space:nowrap" style-hover="background:#f0e7fc;color:#5a36a8">Our Song<sc-if value="{{ atSong }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:50%;bottom:4px;transform:translateX(-50%);width:16px;height:3px;border-radius:3px;background:linear-gradient(90deg,#b69ae8,#8b6fd0)"></span></sc-if></button>
+      <button onClick="{{ goLetter }}" style="position:relative;border:none;background:transparent;cursor:pointer;font-family:'Quicksand',sans-serif;font-weight:600;font-size:14.5px;color:#6a5a93;padding:10px 15px 13px;border-radius:999px;transition:color .2s,background .2s;white-space:nowrap" style-hover="background:#f0e7fc;color:#5a36a8">Letter<sc-if value="{{ atLetter }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:50%;bottom:4px;transform:translateX(-50%);width:16px;height:3px;border-radius:3px;background:linear-gradient(90deg,#b69ae8,#8b6fd0)"></span></sc-if></button>
+      <button onClick="{{ goSurprise }}" style="position:relative;border:none;background:transparent;cursor:pointer;font-family:'Quicksand',sans-serif;font-weight:600;font-size:14.5px;color:#6a5a93;padding:10px 15px 13px;border-radius:999px;transition:color .2s,background .2s;white-space:nowrap" style-hover="background:#f0e7fc;color:#5a36a8">Surprise<sc-if value="{{ atSurprise }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:50%;bottom:4px;transform:translateX(-50%);width:16px;height:3px;border-radius:3px;background:linear-gradient(90deg,#b69ae8,#8b6fd0)"></span></sc-if></button>
+    </nav>
+  </header>
+
+  <main style="position:relative;z-index:2;padding:8px 22px 70px">
+
+    <sc-if value="{{ atHome }}" hint-placeholder-val="{{ true }}">
+      <div style="max-width:1060px;margin:0 auto;animation:letterIn .5s ease both">
+        <section style="display:flex;gap:46px;flex-wrap:wrap;align-items:center;justify-content:center;padding:30px 0 6px">
+          <div style="flex:1 1 340px;min-width:300px;max-width:560px">
+            <div style="display:inline-flex;align-items:center;gap:8px;font-weight:600;letter-spacing:3px;font-size:12px;text-transform:uppercase;color:#9d80da">♡ since the 31st of march ♡</div>
+            <h1 style="font-family:'Caveat',cursive;font-weight:700;font-size:clamp(58px,9vw,104px);line-height:.92;margin:14px 0 6px;color:#5b39a8">Lakshika <span style="color:#c98fc6">&amp;</span> Anirudh</h1>
+            <p style="font-size:clamp(17px,2.2vw,21px);line-height:1.6;color:#6a5d8e;margin:6px 0 22px;max-width:440px">three little months together — and somehow it already feels like my favourite story.</p>
+            <sc-if value="{{ showDays }}" hint-placeholder-val="{{ true }}">
+              <div style="display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.7);border:1px solid #ece0fb;border-radius:999px;padding:9px 18px;font-weight:600;color:#6b4fb0;box-shadow:0 12px 26px -18px rgba(110,81,176,.5)"><span style="color:#e08fc0;font-size:17px">♥</span><span style="white-space:nowrap">{{ days }} days together &amp; counting</span></div>
+            </sc-if>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px">
+              <button onClick="{{ goLetter }}" style="background:linear-gradient(135deg,#a98be0,#876fd6);color:#fff;border:none;padding:14px 24px;border-radius:999px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:15.5px;cursor:pointer;box-shadow:0 16px 30px -14px rgba(124,92,200,.8);transition:transform .2s,box-shadow .2s" style-hover="transform:translateY(-2px);box-shadow:0 20px 34px -14px rgba(124,92,200,.9)">Read your letter ♡</button>
+              <button onClick="{{ goPhotos }}" style="background:#fff;color:#6b4fb0;border:1px solid #e6dafa;padding:14px 24px;border-radius:999px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:15.5px;cursor:pointer;transition:transform .2s,background .2s" style-hover="background:#f7f1fe;transform:translateY(-2px)">See our photos</button>
+            </div>
+          </div>
+          <div style="flex:0 0 auto;animation:bob 6s ease-in-out infinite">
+            <div style="position:relative;background:#fff;padding:12px;border-radius:150px 150px 20px 20px;box-shadow:0 30px 60px -30px rgba(94,58,160,.6);border:1px solid #efe6fa">
+              <div style="width:280px;max-width:72vw;height:360px;border-radius:140px 140px 12px 12px;overflow:hidden;background:#f1e9fb">
+                <image-slot id="heroPhoto" style="width:100%;height:100%;display:block" shape="rounded" radius="0" placeholder="drop a photo of us ♡"></image-slot>
+              </div>
+              <div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:30px;color:#e08fc0;text-shadow:0 4px 10px rgba(200,120,180,.4)">♥</div>
+            </div>
+            <div style="text-align:center;margin-top:8px">
+              <div style="font-family:'Caveat',cursive;font-size:24px;color:#7a5fc0;line-height:1">us ♡</div>
+              <button onClick="{{ replacePhoto }}" style="margin-top:8px;background:#fff;color:#6b4fb0;border:1px solid #e6dafa;padding:8px 18px;border-radius:999px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:13px;cursor:pointer;transition:transform .2s,background .2s;box-shadow:0 10px 22px -16px rgba(110,81,176,.6)" style-hover="background:#f7f1fe;transform:translateY(-1px)">♥ change our photo</button>
+            </div>
+          </div>
+        </section>
+
+        <section style="margin-top:54px">
+          <div style="text-align:center;margin-bottom:26px">
+            <div style="font-weight:600;letter-spacing:3px;font-size:12px;text-transform:uppercase;color:#9d80da">our story so far</div>
+            <h2 style="font-family:'Caveat',cursive;font-weight:700;font-size:clamp(40px,6.5vw,64px);line-height:1;color:#5b39a8;margin:6px 0 0">how we happened</h2>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">
+            <div style="background:#fff;border:1px solid #efe6fa;border-radius:22px;padding:24px 22px;box-shadow:0 22px 44px -30px rgba(94,58,160,.45);transition:transform .25s,box-shadow .25s" style-hover="transform:translateY(-5px);box-shadow:0 30px 54px -30px rgba(94,58,160,.55)">
+              <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#efe2fb,#e3d2f6);display:flex;align-items:center;justify-content:center;font-family:'Caveat',cursive;font-weight:700;font-size:24px;color:#7a5fc0;margin-bottom:14px">01</div>
+              <div style="font-weight:600;letter-spacing:2px;font-size:11px;text-transform:uppercase;color:#9d80da;margin-bottom:4px">where it started</div>
+              <h3 style="font-family:'Caveat',cursive;font-size:32px;color:#4a3d6e;margin:0 0 8px;line-height:1">A hackathon</h3>
+              <p style="font-size:15px;line-height:1.7;color:#6a5d8e;margin:0">The very first time I laid my eyes on you&nbsp;</p>
+            </div>
+            <div style="background:#fff;border:1px solid #efe6fa;border-radius:22px;padding:24px 22px;box-shadow:0 22px 44px -30px rgba(94,58,160,.45);transition:transform .25s,box-shadow .25s" style-hover="transform:translateY(-5px);box-shadow:0 30px 54px -30px rgba(94,58,160,.55)">
+              <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#efe2fb,#e3d2f6);display:flex;align-items:center;justify-content:center;font-family:'Caveat',cursive;font-weight:700;font-size:24px;color:#7a5fc0;margin-bottom:14px">02</div>
+              <div style="font-weight:600;letter-spacing:2px;font-size:11px;text-transform:uppercase;color:#9d80da;margin-bottom:4px">somewhere in between</div>
+              <h3 style="font-family:'Caveat',cursive;font-size:32px;color:#4a3d6e;margin:0 0 8px;line-height:1">Dates, Walks, GAG evenings</h3>
+              <p style="font-size:15px;line-height:1.7;color:#6a5d8e;margin:0">Happiest I've ever been anywhere in the world<br><br></p>
+            </div>
+            <div style="background:#fff;border:1px solid #efe6fa;border-radius:22px;padding:24px 22px;box-shadow:0 22px 44px -30px rgba(94,58,160,.45);transition:transform .25s,box-shadow .25s" style-hover="transform:translateY(-5px);box-shadow:0 30px 54px -30px rgba(94,58,160,.55)">
+              <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#efe2fb,#e3d2f6);display:flex;align-items:center;justify-content:center;font-family:'Caveat',cursive;font-weight:700;font-size:24px;color:#7a5fc0;margin-bottom:14px">03</div>
+              <div style="font-weight:600;letter-spacing:2px;font-size:11px;text-transform:uppercase;color:#9d80da;margin-bottom:4px">right now</div>
+              <h3 style="font-family:'Caveat',cursive;font-size:32px;color:#4a3d6e;margin:0 0 8px;line-height:1">Three months in</h3>
+              <p style="font-size:15px;line-height:1.7;color:#6a5d8e;margin:0">It's been amazing, I could never love anybody like I love you but as all relationships are, it's also been difficult, and you've been the best partner I could ever hope for in those moments.&nbsp;&nbsp;<br>Still choosing you in every little moment. Lavender skies and brownie nights ahead.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ atPhotos }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:1000px;margin:0 auto;animation:letterIn .5s ease both">
+        <div style="text-align:center;margin:24px 0 6px">
+          <div style="font-weight:600;letter-spacing:3px;font-size:12px;text-transform:uppercase;color:#9d80da">our little gallery</div>
+          <h2 style="font-family:'Caveat',cursive;font-weight:700;font-size:clamp(44px,7vw,68px);line-height:1;color:#5b39a8;margin:6px 0 8px">moments i want to keep</h2>
+          <p style="font-size:16px;color:#6a5d8e;max-width:460px;margin:0 auto">drag your favourite photos straight onto the frames — they'll stay right where you put them.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:30px;padding-top:30px">
+          
+          
+          <div style="background:#fff;padding:12px 12px 14px;border-radius:10px;box-shadow:0 20px 38px -24px rgba(94,58,160,.55);border:1px solid #f1e9fa;transform:rotate(-2deg);transition:transform .25s,box-shadow .25s" style-hover="transform:rotate(0deg) translateY(-6px);box-shadow:0 30px 54px -24px rgba(94,58,160,.6)">
+            <image-slot id="photo3" style="width:100%;height:215px;display:block" shape="rounded" radius="6" placeholder="drop a photo"></image-slot>
+            <div style="font-family: 'Caveat',cursive; font-size: 22px; color: #6f57a8; text-align: center; padding: 10px 4px 2px; position: relative"><br><div style="font-size: 16px; line-height: 1; font-family: Caveat; position: absolute; left: 47px; top: 17px; width: 174px; height: 22px">Hackathon&nbsp;</div></div>
+          </div>
+          
+          <div style="background:#fff;padding:12px 12px 14px;border-radius:10px;box-shadow:0 20px 38px -24px rgba(94,58,160,.55);border:1px solid #f1e9fa;transform:rotate(-1.5deg);transition:transform .25s,box-shadow .25s" style-hover="transform:rotate(0deg) translateY(-6px);box-shadow:0 30px 54px -24px rgba(94,58,160,.6)">
+            <image-slot id="photo5" style="width:100%;height:215px;display:block" shape="rounded" radius="6" placeholder="drop a photo"></image-slot>
+            <div style="font-family:'Caveat',cursive;font-size:22px;color:#6f57a8;text-align:center;padding:10px 4px 2px">just us</div>
+          </div>
+          <div style="background:#fff;padding:12px 12px 14px;border-radius:10px;box-shadow:0 20px 38px -24px rgba(94,58,160,.55);border:1px solid #f1e9fa;transform:rotate(2deg);transition:transform .25s,box-shadow .25s" style-hover="transform:rotate(0deg) translateY(-6px);box-shadow:0 30px 54px -24px rgba(94,58,160,.6)">
+            <image-slot id="photo6" style="width:100%;height:215px;display:block" shape="rounded" radius="6" placeholder="drop a photo"></image-slot>
+            <div style="font-family:'Caveat',cursive;font-size:22px;color:#6f57a8;text-align:center;padding:10px 4px 2px">my favorite date</div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ atSong }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:720px;margin:0 auto;animation:letterIn .5s ease both">
+        <div style="text-align:center;margin:24px 0 24px">
+          <div style="font-weight:600;letter-spacing:3px;font-size:12px;text-transform:uppercase;color:#9d80da">the soundtrack of us</div>
+          <h2 style="font-family:'Caveat',cursive;font-weight:700;font-size:clamp(44px,7vw,68px);line-height:1;color:#5b39a8;margin:6px 0 8px">our song</h2>
+          <p style="font-size:16px;color:#6a5d8e;max-width:440px;margin:0 auto">press play and pretend we're slow-dancing in the kitchen.</p>
+        </div>
+        <div style="background:linear-gradient(155deg,#7a5fbf,#9b7ed6 58%,#b48fd6);border-radius:30px;padding:30px;box-shadow:0 34px 64px -30px rgba(90,55,150,.8);display:flex;gap:26px;align-items:center;flex-wrap:wrap;justify-content:center">
+          <div style="width:152px;height:152px;border-radius:50%;background:repeating-radial-gradient(circle at 50% 50%,#1b1626 0 2px,#272032 2px 4px);box-shadow:0 18px 30px -14px rgba(0,0,0,.6),inset 0 0 0 6px #15101e;position:relative;flex:0 0 auto;animation:spin 7s linear infinite;animation-play-state:{{ playState }}">
+            <div style="position:absolute;inset:34%;border-radius:50%;background:linear-gradient(135deg,#cda8ee,#9b7ed6);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(0,0,0,.3)">
+              <div style="width:9px;height:9px;border-radius:50%;background:#15101e"></div>
+            </div>
+            <div style="position:absolute;top:14px;left:26px;width:40px;height:28px;border-radius:50%;background:rgba(255,255,255,.12);filter:blur(5px)"></div>
+          </div>
+          <div style="flex:1 1 260px;min-width:240px;color:#fff">
+            <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.72);font-weight:600">now playing</div>
+            <div style="font-family:'Caveat',cursive;font-size:46px;line-height:1;margin:4px 0 2px">Ivy</div>
+            <div style="color:rgba(255,255,255,.82);font-size:15px;margin-bottom:18px">Frank Ocean</div>
+            <div style="height:8px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden;position:relative">
+              <div style="height:100%;width:34%;border-radius:999px;background:#fff"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.7);margin-top:7px"><span>1:12</span><span>3:30</span></div>
+            <div style="display:flex;align-items:center;gap:14px;margin-top:18px">
+              <button onClick="{{ togglePlay }}" style="width:56px;height:56px;border-radius:50%;border:none;background:#fff;color:#7a5fbf;font-size:18px;cursor:pointer;box-shadow:0 12px 24px -10px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;transition:transform .15s" style-hover="transform:scale(1.06)">{{ playLabel }}</button>
+              <sc-if value="{{ isPlaying }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:flex-end;gap:4px;height:26px">
+                  <div style="width:4px;height:100%;background:rgba(255,255,255,.92);border-radius:2px;transform-origin:bottom;animation:eq .8s ease-in-out infinite;animation-delay:0s"></div>
+                  <div style="width:4px;height:100%;background:rgba(255,255,255,.92);border-radius:2px;transform-origin:bottom;animation:eq .8s ease-in-out infinite;animation-delay:.18s"></div>
+                  <div style="width:4px;height:100%;background:rgba(255,255,255,.92);border-radius:2px;transform-origin:bottom;animation:eq .8s ease-in-out infinite;animation-delay:.34s"></div>
+                  <div style="width:4px;height:100%;background:rgba(255,255,255,.92);border-radius:2px;transform-origin:bottom;animation:eq .8s ease-in-out infinite;animation-delay:.1s"></div>
+                  <div style="width:4px;height:100%;background:rgba(255,255,255,.92);border-radius:2px;transform-origin:bottom;animation:eq .8s ease-in-out infinite;animation-delay:.26s"></div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:28px">
+          
+          
+          
+          
+          
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ atLetter }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:660px;margin:0 auto;animation:letterIn .5s ease both">
+        <div style="text-align:center;margin:24px 0 10px">
+          <div style="font-weight:600;letter-spacing:3px;font-size:12px;text-transform:uppercase;color:#9d80da">a letter for you</div>
+          <h2 style="font-family:'Caveat',cursive;font-weight:700;font-size:clamp(44px,7vw,68px);line-height:1;color:#5b39a8;margin:6px 0 8px">open me ♡</h2>
+        </div>
+
+        <sc-if value="{{ envelopeVisible }}" hint-placeholder-val="{{ true }}">
+          <div style="perspective:1200px;display:flex;flex-direction:column;align-items:center;margin-top:18px">
+            <div onClick="{{ openLetter }}" role="button" tabindex="0" style="position:relative;width:340px;max-width:86vw;height:226px;cursor:pointer">
+              <div style="position:absolute;inset:0;border-radius:16px;background:linear-gradient(160deg,#b193e6,#9576cf);box-shadow:0 30px 56px -26px rgba(100,60,160,.75);overflow:hidden">
+                <div style="position:absolute;left:30px;right:30px;bottom:48px;height:11px;border-radius:999px;background:rgba(255,255,255,.26)"></div>
+                <div style="position:absolute;left:30px;right:130px;bottom:28px;height:11px;border-radius:999px;background:rgba(255,255,255,.18)"></div>
+              </div>
+              <div style="position:absolute;top:0;left:0;right:0;height:140px;transform-origin:50% 0;transform:{{ flapTransform }};transition:transform .7s cubic-bezier(.6,.05,.25,1);clip-path:polygon(0 0,100% 0,50% 100%);background:linear-gradient(160deg,#c6abef,#a98be0);z-index:4;backface-visibility:hidden"></div>
+              <div style="position:absolute;top:82px;left:50%;transform:translateX(-50%);width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f0a8d0,#d87ab2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;z-index:5;box-shadow:0 8px 18px -6px rgba(180,90,150,.7)">♥</div>
+            </div>
+            <div style="font-family:'Caveat',cursive;font-size:26px;color:#7a5fc0;margin-top:18px">{{ letterHint }}</div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ letterShown }}" hint-placeholder-val="{{ false }}">
+          <div style="background:linear-gradient(180deg,#fffdf9,#fbf6ff);border:1px solid #efe6fa;border-radius:20px;padding:38px 32px;box-shadow:0 36px 70px -34px rgba(94,58,160,.6);animation:letterIn .7s cubic-bezier(.2,.7,.2,1) both;max-width:600px;margin:14px auto 0">
+            <div style="font-family:'Caveat',cursive;font-size:34px;color:#7a5fc0;margin-bottom:14px;line-height:1.1">My dearest Lakshika,</div>
+            <p style="font-size:16.5px;line-height:1.85;color:#564a76;margin:0 0 14px">Three months ago I walked into techflix not expecting anything. Instead, I walked out with the sight of you in my mind. Every day since has been better than the last. The first time I sent you a request, my panicked texts to you, our long conversations that went on for all day, I miss them all, and I cherish those memories&nbsp;</p>
+            <p style="font-size:16.5px;line-height:1.85;color:#564a76;margin:0 0 14px">I think about our dates together. The first one, that got us together, and the second one, that gave us the magical bus ride back to college. I wouldn't trade those for anything in the world</p>
+            <p style="font-size:16.5px;line-height:1.85;color:#564a76;margin:0 0 14px">Since then it's been brownie-and-ice-cream evenings, walking around with you, and a hundred little lavender-coloured moments I've been quietly collecting and keeping.</p>
+            <p style="font-size:16.5px;line-height:1.85;color:#564a76;margin:0 0 14px">You are my favourite hello and my hardest goodbye. Thank you for these three months — for laughing at my jokes, for your patience, for simply being you.</p>
+            <p style="font-size:16.5px;line-height:1.85;color:#564a76;margin:0 0 4px">Here's to every month still coming. I'm not going anywhere.</p>
+            <div style="font-family:'Caveat',cursive;font-size:30px;color:#7a5fc0;margin-top:18px;line-height:1.2">All my love,<br>Anirudh ♡</div>
+            <div style="font-size:12.5px;color:#a99cc4;margin-top:6px">30 June 2026</div>
+            <div style="text-align:center;margin-top:24px">
+              <button onClick="{{ closeLetter }}" style="background:#fff;color:#6b4fb0;border:1px solid #e6dafa;padding:11px 22px;border-radius:999px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:14.5px;cursor:pointer;transition:transform .2s,background .2s" style-hover="background:#f7f1fe;transform:translateY(-2px)">seal it back up</button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ atSurprise }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:600px;margin:0 auto;text-align:center;animation:letterIn .5s ease both">
+        <div style="margin:24px 0 6px">
+          <div style="font-weight:600;letter-spacing:3px;font-size:12px;text-transform:uppercase;color:#9d80da">one last thing</div>
+          <h2 style="font-family:'Caveat',cursive;font-weight:700;font-size:clamp(44px,7vw,68px);line-height:1;color:#5b39a8;margin:6px 0 8px">a little surprise</h2>
+          <p style="font-size:16px;color:#6a5d8e;max-width:420px;margin:0 auto">scratch the foil away with your finger or your mouse.</p>
+        </div>
+        <div style="position:relative;width:100%;max-width:480px;height:300px;margin:24px auto 0;border-radius:22px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(94,58,160,.6);border:1px solid #e9ddf7;background:linear-gradient(180deg,#fffdf9,#fbf6ff)">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px">
+            <div style="font-family:'Caveat',cursive;font-size:30px;color:#c98fc6;line-height:1">p.s.</div>
+            <div style="font-family:'Caveat',cursive;font-size:clamp(40px,9vw,58px);line-height:1;color:#6b4fb0;margin:4px 0 10px">i love you,<br>Lakshika</div>
+            <div style="font-size:15px;color:#6a5d8e;max-width:320px;line-height:1.5">here's to forever-ish, and a thousand more bus rides. — A ♡</div>
+          </div>
+          <canvas ref="{{ scratchRef }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:none"></canvas>
+        </div>
+        <div style="margin-top:18px">
+          <button onClick="{{ resetScratch }}" style="background:#fff;color:#6b4fb0;border:1px solid #e6dafa;padding:11px 22px;border-radius:999px;font-family:'Quicksand',sans-serif;font-weight:600;font-size:14.5px;cursor:pointer;transition:transform .2s,background .2s" style-hover="background:#f7f1fe;transform:translateY(-2px)">cover it again</button>
+        </div>
+        <sc-if value="{{ scratchRevealed }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:16px;font-family:'Caveat',cursive;font-size:28px;color:#7a5fc0;animation:popIn .5s ease both">happy three months, my love ♡</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+  </main>
+
+  <footer style="position:relative;z-index:2;text-align:center;padding:28px 20px 40px;color:#8a7cb0">
+    <div style="font-family:'Caveat',cursive;font-size:26px;color:#7a5fc0">made with all my love</div>
+    <div style="font-size:13px;letter-spacing:.5px;margin-top:2px">Anirudh · for Lakshika · June 2026</div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showPetals&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Ambience&quot;},&quot;petalAmount&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Gentle&quot;,&quot;Dreamy&quot;,&quot;Lots&quot;],&quot;default&quot;:&quot;Dreamy&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Ambience&quot;},&quot;showDays&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Ambience&quot;}}">
+class Component extends DCLogic {
+  state = { page: 'home', isPlaying: false, letterPhase: 'closed', scratchRevealed: false };
+
+  go = (id) => {
+    this.setState({ page: id });
+    try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
+  };
+
+  togglePlay = () => this.setState((s) => ({ isPlaying: !s.isPlaying }));
+
+  replacePhoto = () => {
+    const slot = document.getElementById('heroPhoto');
+    const input = slot && slot.shadowRoot && slot.shadowRoot.querySelector('input[type="file"]');
+    if (input) input.click();
+  };
+
+  openLetter = () => {
+    if (this.state.letterPhase !== 'closed') return;
+    this.setState({ letterPhase: 'opening' });
+    clearTimeout(this._lt);
+    this._lt = setTimeout(() => this.setState({ letterPhase: 'open' }), 720);
+  };
+
+  closeLetter = () => {
+    clearTimeout(this._lt);
+    this.setState({ letterPhase: 'closed' });
+  };
+
+  scratchRef = (node) => {
+    if (!node) {
+      if (this._scratchCleanup) this._scratchCleanup();
+      this._scratchCleanup = null;
+      this._canvas = null;
+      this._ctx = null;
+      return;
+    }
+    if (this._canvas === node) return;
+    this._canvas = node;
+    this._setupScratch(node);
+  };
+
+  _setupScratch(canvas) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.getBoundingClientRect();
+    const w = Math.max(2, Math.round(rect.width)) || 480;
+    const h = Math.max(2, Math.round(rect.height)) || 300;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    this._ctx = ctx;
+    this._cw = w;
+    this._ch = h;
+
+    this.paintFoil = () => {
+      ctx.globalCompositeOperation = 'source-over';
+      const g = ctx.createLinearGradient(0, 0, w, h);
+      g.addColorStop(0, '#b79be4');
+      g.addColorStop(0.5, '#cdb4ef');
+      g.addColorStop(1, '#e7a9d0');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = 'rgba(255,255,255,0.22)';
+      for (let i = 0; i < 28; i++) {
+        const rx = Math.random() * w, ry = Math.random() * h, rr = Math.random() * 3 + 1;
+        ctx.beginPath();
+        ctx.arc(rx, ry, rr, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = 'rgba(255,255,255,0.72)';
+      ctx.font = "600 17px 'Quicksand', sans-serif";
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('scratch here  \u2665', w / 2, h / 2);
+      canvas.style.transition = '';
+      canvas.style.opacity = '1';
+      canvas.style.pointerEvents = 'auto';
+    };
+    this.paintFoil();
+
+    let drawing = false;
+    const pos = (e) => {
+      const r = canvas.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    };
+    const erase = (x, y) => {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 24, 0, Math.PI * 2);
+      ctx.fill();
+    };
+    const down = (e) => {
+      drawing = true;
+      const p = pos(e);
+      erase(p.x, p.y);
+      if (canvas.setPointerCapture && e.pointerId != null) { try { canvas.setPointerCapture(e.pointerId); } catch (_) {} }
+      e.preventDefault();
+    };
+    const move = (e) => {
+      if (!drawing) return;
+      const p = pos(e);
+      erase(p.x, p.y);
+      e.preventDefault();
+    };
+    const up = () => {
+      if (!drawing) return;
+      drawing = false;
+      this._checkScratch();
+    };
+    canvas.addEventListener('pointerdown', down);
+    canvas.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    canvas.addEventListener('pointercancel', up);
+    this._scratchCleanup = () => {
+      canvas.removeEventListener('pointerdown', down);
+      canvas.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      canvas.removeEventListener('pointercancel', up);
+    };
+  }
+
+  _checkScratch() {
+    const ctx = this._ctx;
+    if (!ctx || !this._canvas) return;
+    try {
+      const data = ctx.getImageData(0, 0, this._canvas.width, this._canvas.height).data;
+      let clear = 0, total = 0;
+      const step = 40;
+      for (let i = 3; i < data.length; i += step) {
+        total++;
+        if (data[i] === 0) clear++;
+      }
+      if (total && clear / total > 0.5 && !this.state.scratchRevealed) {
+        this.setState({ scratchRevealed: true });
+        this._canvas.style.transition = 'opacity .8s ease';
+        this._canvas.style.opacity = '0';
+        this._canvas.style.pointerEvents = 'none';
+      }
+    } catch (e) {}
+  }
+
+  resetScratch = () => {
+    if (this.paintFoil) this.paintFoil();
+    this.setState({ scratchRevealed: false });
+  };
+
+  componentWillUnmount() {
+    clearTimeout(this._lt);
+    if (this._scratchCleanup) this._scratchCleanup();
+  }
+
+  _buildPetals(count) {
+    const colors = ['#b79be4', '#caa3ec', '#e6a9d0', '#ffffff', '#9d80da', '#d7b6f0'];
+    const arr = [];
+    for (let i = 0; i < count; i++) {
+      const type = (i % 3 === 0) ? 'dot' : 'heart';
+      const size = type === 'heart' ? (14 + Math.random() * 22) : (5 + Math.random() * 7);
+      const color = colors[i % colors.length];
+      const dur = 11 + Math.random() * 13;
+      const delay = -(Math.random() * dur);
+      const sway = (24 + Math.random() * 60) * (Math.random() < 0.5 ? -1 : 1);
+      const pop = type === 'dot' ? 0.5 : 0.72;
+      const sc = 0.7 + Math.random() * 0.7;
+      const base = {
+        position: 'absolute', left: (Math.random() * 100) + '%', top: 0, willChange: 'transform',
+        '--sway': sway + 'px', '--pop': pop, '--sc': sc,
+        animation: 'petalFloat ' + dur + 's linear ' + delay + 's infinite'
+      };
+      const style = type === 'heart'
+        ? Object.assign({}, base, { color: color, fontSize: size + 'px', lineHeight: 1, textShadow: '0 3px 8px rgba(150,110,200,.25)' })
+        : Object.assign({}, base, { width: size + 'px', height: size + 'px', background: color, borderRadius: '50%', boxShadow: '0 2px 8px rgba(150,110,200,.22)' });
+      arr.push({ style: style, glyph: type === 'heart' ? '\u2665' : '' });
+    }
+    return arr;
+  }
+
+  renderVals() {
+    const page = this.state.page;
+    const amount = this.props.petalAmount || 'Dreamy';
+    const count = ({ Gentle: 12, Dreamy: 20, Lots: 32 })[amount] || 20;
+    if (!this._petals || this._petalsCount !== count) {
+      this._petals = this._buildPetals(count);
+      this._petalsCount = count;
+    }
+    const start = new Date(2026, 2, 31).getTime();
+    const days = Math.max(0, Math.floor((Date.now() - start) / 86400000));
+    const phase = this.state.letterPhase;
+    return {
+      showPetals: this.props.showPetals !== false,
+      petals: this._petals,
+      showDays: this.props.showDays !== false,
+      days: days,
+      atHome: page === 'home', atPhotos: page === 'photos', atSong: page === 'song', atLetter: page === 'letter', atSurprise: page === 'surprise',
+      goHome: () => this.go('home'), goPhotos: () => this.go('photos'), goSong: () => this.go('song'), goLetter: () => this.go('letter'), goSurprise: () => this.go('surprise'),
+      isPlaying: this.state.isPlaying, togglePlay: this.togglePlay, playLabel: this.state.isPlaying ? '\u275a\u275a' : '\u25b6', playState: this.state.isPlaying ? 'running' : 'paused',
+      envelopeVisible: phase !== 'open', letterShown: phase === 'open',
+      flapTransform: phase === 'closed' ? 'rotateX(0deg)' : 'rotateX(-172deg)',
+      letterHint: phase === 'closed' ? 'tap to open \u2661' : 'opening\u2026',
+      openLetter: this.openLetter, closeLetter: this.closeLetter, replacePhoto: this.replacePhoto,
+      scratchRef: this.scratchRef, resetScratch: this.resetScratch, scratchRevealed: this.state.scratchRevealed
+    };
+  }
+}
+</script>
+</body>
+</html>
